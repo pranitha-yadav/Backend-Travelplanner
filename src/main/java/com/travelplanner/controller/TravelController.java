@@ -19,7 +19,7 @@ import com.travelplanner.dto.TripRequest;
 @CrossOrigin(origins = "https://frontend-travelplanner.vercel.app/")
 public class TravelController {
 
-    @Value("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")                               ////
+    @Value("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")                               ////
     private String apiKey;
 
     @PostMapping("/generate-itinerary")
@@ -43,7 +43,7 @@ public class TravelController {
                     .uri(URI.create("https://openrouter.ai/api/v1/chat/completions"))
                     .header("Authorization", "Bearer " + apiKey)
                     .header("Content-Type", "application/json")
-                    .header("HTTP-Referer", "http://localhost:5173")
+                    .header("HTTP-Referer", "https://frontend-travelplanner.vercel.app/")
                     .header("X-Title", "AI Trip Planner")
                     .POST(HttpRequest.BodyPublishers.ofString(requestBody))
                     .build();
