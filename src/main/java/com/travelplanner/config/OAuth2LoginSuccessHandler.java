@@ -49,7 +49,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         String token = jwtUtils.generateToken(user);
 
         // Redirect to frontend with token and user info
-        response.sendRedirect("https://travel-planner-frontend-flax.vercel.app/oauth2-success?token=" + token
+        response.sendRedirect("https://frontend-travelplanner.vercel.app/oauth2-success?token=" + token
         	    + "&userId=" + user.getId()
         	    + "&username=" + user.getUsername());
 

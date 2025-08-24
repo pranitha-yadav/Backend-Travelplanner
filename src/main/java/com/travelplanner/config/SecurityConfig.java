@@ -72,7 +72,7 @@ public class SecurityConfig {
 
         // Add your frontend's actual deployed domain
         config.setAllowedOrigins(List.of(
-            "https://travel-planner-frontend-flax.vercel.app"
+            "https://frontend-travelplanner.vercel.app"
         ));
 
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
