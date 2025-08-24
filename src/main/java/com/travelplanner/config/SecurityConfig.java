@@ -29,17 +29,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .cors().and() // Enable CORS
-            .csrf().disable()
+            // ✅ Hook CORS configuration
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow preflight
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // allow preflight
                 .requestMatchers("/auth/**", "/otp/**", "/oauth2/**").permitAll()
                 .requestMatchers("/api/generate-itinerary", "/api/itineraries").permitAll()
                 .anyRequest().authenticated()
             )
             .oauth2Login(oauth -> oauth
-                .userInfoEndpoint().userService(oAuth2UserService)
-                .and()
+                .userInfoEndpoint(user -> user.userService(oAuth2UserService))
                 .successHandler(oAuth2LoginSuccessHandler)
             )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
@@ -53,15 +53,15 @@ public class SecurityConfig {
     }
 
     /**
-     * CORS configuration - allow only Vercel frontend
+     * CORS Configuration
      */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        config.setAllowedOrigins(List.of(
-            "https://frontend-travelplanner.vercel.app"
-        ));
+        // ✅ Your frontend domain
+        config.setAllowedOrigins(List.of("https://frontend-travelplanner.vercel.app"));
+
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setExposedHeaders(List.of("Authorization"));
