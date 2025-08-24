@@ -3,14 +3,6 @@ package com.travelplanner.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-//import org.springframework.context.annotation.Primary;
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Bean;
-//
-//import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -40,12 +32,9 @@ public class SecurityConfig {
             .cors().and() // Enable CORS
             .csrf().disable()
             .authorizeHttpRequests(auth -> auth
-                // Allow all preflight OPTIONS requests
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                // Allow public endpoints
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow preflight
                 .requestMatchers("/auth/**", "/otp/**", "/oauth2/**").permitAll()
                 .requestMatchers("/api/generate-itinerary", "/api/itineraries").permitAll()
-                // All other requests require auth
                 .anyRequest().authenticated()
             )
             .oauth2Login(oauth -> oauth
@@ -64,25 +53,22 @@ public class SecurityConfig {
     }
 
     /**
-     * CORS Configuration
+     * CORS configuration - allow only Vercel frontend
      */
-   @Bean
+    @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-        // Add your frontend's actual deployed domain
         config.setAllowedOrigins(List.of(
             "https://frontend-travelplanner.vercel.app"
         ));
-
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setExposedHeaders(List.of("Authorization"));
-        config.setAllowCredentials(true); // Needed if using cookies / Authorization headers
+        config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
     }
-
 }
